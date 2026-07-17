@@ -2,7 +2,9 @@
 
 AI에 연결할 수 있는 모든 것을 한 곳에서. 한국·미국 비즈니스 리더를 위한 오픈소스 **MCP 커넥터 카탈로그**.
 
-![MCP 허브 썸네일](docs/assets/og-thumbnail.svg)
+**라이브 사이트 → [airoasting-mcp.vercel.app](https://airoasting-mcp.vercel.app/)**
+
+[![MCP 허브 썸네일](docs/assets/og-thumbnail.svg)](https://airoasting-mcp.vercel.app/)
 
 ## 무엇인가
 
@@ -128,7 +130,7 @@ MCP(Model Context Protocol)는 AI를 외부 데이터·서비스에 연결하는
 
 ```
 .
-├── docs/                 # GitHub Pages 발행 폴더
+├── docs/                 # 사이트 본체 (Vercel 배포 루트)
 │   ├── index.html        # 카탈로그 본체 (DATA 배열이 정본 데이터)
 │   └── assets/           # 로고·favicon·썸네일
 ├── archive/              # 이전 디자인 실험본 (Nintendo·Airbnb·Discord)

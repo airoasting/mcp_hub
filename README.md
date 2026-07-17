@@ -2,7 +2,9 @@
 
 AI에 연결할 수 있는 모든 것을 한 곳에서. 한국·미국 비즈니스 리더를 위한 오픈소스 **MCP 커넥터 카탈로그**.
 
-**라이브 사이트 → [airoasting-mcp.vercel.app](https://airoasting-mcp.vercel.app/)**
+[![Live Demo](https://img.shields.io/badge/Live_Demo-airoasting--mcp.vercel.app-e8720c?style=flat-square&logo=vercel&logoColor=white)](https://airoasting-mcp.vercel.app/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+
+**🔗 라이브 사이트: [https://airoasting-mcp.vercel.app/](https://airoasting-mcp.vercel.app/)**
 
 [![MCP 허브 썸네일](docs/assets/og-thumbnail.svg)](https://airoasting-mcp.vercel.app/)
 

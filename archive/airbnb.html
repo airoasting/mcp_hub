@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP 허브 | AI ROASTING — Airbnb 스타일</title>
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logos/favicon-256.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/logos/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  /* ============ Airbnb marketplace system ============
+     canvas #fff · ink #222 · single accent Rausch #ff385c
+     one shadow tier · soft radii (8 / 14 / pill) · Inter as Cereal substitute */
+  :root{
+    --primary:#ff385c; --primary-active:#e00b41; --primary-disabled:#ffd1da;
+    --canvas:#ffffff; --soft:#f7f7f7; --strong:#f2f2f2;
+    --hairline:#dddddd; --hairline-soft:#ebebeb; --border-strong:#c1c1c1;
+    --ink:#222222; --body:#3f3f3f; --muted:#6a6a6a; --muted-soft:#929292;
+    --shadow:rgba(0,0,0,.02) 0 0 0 1px, rgba(0,0,0,.04) 0 2px 6px 0, rgba(0,0,0,.1) 0 4px 8px 0;
+    --font:'Inter','Pretendard Variable',Pretendard,Circular,-apple-system,system-ui,Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--canvas);font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--font)}
+  input,select{font-family:var(--font)}
+  input:focus{outline:none}
+  button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+
+  /* ---- top nav ---- */
+  .top-nav{position:sticky;top:0;z-index:20;background:var(--canvas);border-bottom:1px solid var(--hairline-soft)}
+  .top-nav-inner{height:80px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:9px;flex:1}
+  .brand img{width:32px;height:32px;border-radius:50%}
+  .brand span{font:700 18px/1 var(--font);color:var(--primary);letter-spacing:-.2px;white-space:nowrap}
+  .product-tabs{display:flex;align-items:center;gap:28px}
+  .product-tab{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 2px;color:var(--muted);font:600 16px/1.25 var(--font)}
+  .product-tab .tab-icon{font-size:26px;line-height:1}
+  .product-tab.active{color:var(--ink)}
+  .product-tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ink);border-radius:1px}
+  .new-tag{position:absolute;top:0;right:-16px;background:var(--ink);color:#fff;font:700 8px/1.25 var(--font);letter-spacing:.32px;text-transform:uppercase;border-radius:9999px;padding:3px 6px}
+  .nav-right{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px}
+  .nav-right .host-link{font:600 14px/1.29 var(--font);color:var(--ink);padding:10px 12px;border-radius:9999px}
+  .nav-right .host-link:hover{background:var(--soft)}
+  .icon-circle{width:40px;height:40px;border-radius:50%;border:1px solid var(--hairline);background:var(--canvas);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .icon-circle img{width:100%;height:100%;object-fit:cover}
+
+  /* ---- hero + search ---- */
+  .hero{padding:64px 0 8px;text-align:center}
+  .hero h1{font:700 28px/1.43 var(--font);margin:0 0 6px}
+  .hero p{font:400 16px/1.5 var(--font);color:var(--muted);margin:0 auto;max-width:620px}
+  .search-wrap{display:flex;justify-content:center;padding:28px 0 10px}
+  .search-bar{display:flex;align-items:center;background:var(--canvas);border:1px solid var(--hairline);border-radius:9999px;box-shadow:var(--shadow);height:66px;width:100%;max-width:640px;padding:0 8px 0 4px}
+  .seg{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:8px 20px;border-radius:9999px;cursor:text}
+  .seg:hover{background:var(--soft)}
+  .seg label{font:600 12px/1.29 var(--font);color:var(--ink);cursor:text}
+  .seg input{border:none;background:transparent;font:400 14px/1.43 var(--font);color:var(--ink);width:100%}
+  .seg input::placeholder{color:var(--muted)}
+  .seg select{border:none;background:transparent;font:400 14px/1.43 var(--font);color:var(--muted);width:100%;appearance:none;cursor:pointer;padding:0}
+  .seg-div{width:1px;height:32px;background:var(--hairline);flex:none}
+  .search-orb{flex:none;width:48px;height:48px;border-radius:50%;border:none;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .search-orb:active{background:var(--primary-active)}
+  .search-orb svg{width:17px;height:17px;stroke:#fff;stroke-width:2.6;fill:none}
+  .search-clear{border:none;background:var(--strong);color:var(--ink);width:22px;height:22px;border-radius:50%;cursor:pointer;font:400 13px/1 var(--font);flex:none;display:flex;align-items:center;justify-content:center;margin-right:6px}
+  .search-clear[hidden]{display:none}
+  .hero-stat{font:400 14px/1.43 var(--font);color:var(--muted);text-align:center;margin:4px 0 0}
+  .quick{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .quick .label{font:400 14px/1.43 var(--font);color:var(--muted);margin-right:4px}
+  .quick button{font:500 14px/1.29 var(--font);color:var(--ink);background:var(--canvas);border:1px solid var(--hairline);border-radius:9999px;padding:9px 16px;cursor:pointer}
+  .quick button:hover{border-color:var(--ink)}
+
+  /* ---- category strip ---- */
+  .cat-strip{position:sticky;top:80px;z-index:15;background:var(--canvas);border-bottom:1px solid var(--hairline-soft);padding:18px 0 14px}
+  .cat-strip-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:6px;font:500 14px/1.29 var(--font);color:var(--ink);background:var(--canvas);border:1px solid var(--hairline);border-radius:9999px;padding:9px 16px;cursor:pointer}
+  .chip:hover{border-color:var(--ink)}
+  .chip .cnt{font:400 12px/1 var(--font);color:var(--muted)}
+  .chip.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip.active .cnt{color:rgba(255,255,255,.7)}
+  .sortgroup{display:flex;align-items:center;gap:8px}
+  .sortgroup .label{font:400 14px/1.43 var(--font);color:var(--muted)}
+  .seg-sort{display:flex;gap:6px}
+  .seg-sort button{font:500 14px/1.29 var(--font);color:var(--ink);background:var(--canvas);border:1px solid var(--hairline);border-radius:9999px;padding:8px 14px;cursor:pointer}
+  .seg-sort button:hover{border-color:var(--ink)}
+  .seg-sort button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* ---- sections ---- */
+  .results{padding:8px 0 64px}
+  .section{padding:40px 0 0;scroll-margin-top:170px}
+  .section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+  .section-head h2{font:700 21px/1.43 var(--font);margin:0}
+  .section-head .count{font:400 14px/1.43 var(--font);color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px 16px}
+
+  /* ---- property-style card ---- */
+  .card{display:flex;flex-direction:column;gap:10px;border-radius:14px}
+  .card-photo{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--soft);border:1px solid var(--hairline-soft)}
+  .card-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .25s ease}
+  .card:hover .card-photo img{transform:scale(1.03)}
+  .card:hover .card-photo{box-shadow:var(--shadow)}
+  .fav-badge{position:absolute;top:12px;left:12px;background:var(--canvas);color:var(--ink);font:600 11px/1.18 var(--font);border-radius:9999px;padding:6px 10px;box-shadow:var(--shadow)}
+  .heart{position:absolute;top:10px;right:10px;width:32px;height:32px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .heart svg{width:24px;height:24px;fill:rgba(0,0,0,.5);stroke:#fff;stroke-width:2;transition:transform .15s ease}
+  .heart:hover svg{transform:scale(1.1)}
+  .heart.saved svg{fill:var(--primary);stroke:#fff}
+  .card-meta{display:flex;flex-direction:column;gap:3px;padding:0 2px}
+  .card-line1{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .card-title{font:600 16px/1.25 var(--font);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-rating{flex:none;font:400 14px/1.43 var(--font);color:var(--ink);display:inline-flex;align-items:center;gap:4px}
+  .card-rating svg{width:12px;height:12px;fill:var(--ink)}
+  .card-sub{font:400 14px/1.43 var(--font);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-desc{font:400 14px/1.43 var(--font);color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-price{font:400 14px/1.43 var(--font);color:var(--ink);margin-top:2px}
+  .card-price b{font-weight:600}
+
+  /* ---- empty ---- */
+  .empty{padding:96px 0;text-align:center}
+  .empty .msg{font:600 18px/1.4 var(--font);color:var(--ink)}
+  .empty .sub{font:400 14px/1.5 var(--font);color:var(--muted);margin-top:6px}
+  .empty button{margin-top:20px;font:500 16px/1.25 var(--font);color:#fff;background:var(--primary);border:none;border-radius:8px;padding:14px 24px;cursor:pointer}
+  .empty button:active{background:var(--primary-active)}
+
+  /* ---- footer ---- */
+  .footer{background:var(--soft);border-top:1px solid var(--hairline-soft)}
+  .footer-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:48px 0}
+  .footer-col h3{font:500 16px/1.25 var(--font);margin:0 0 14px}
+  .footer-col a,.footer-col span{display:block;font:400 14px/1.43 var(--font);color:var(--body);padding:6px 0}
+  .footer-col a:hover{text-decoration:underline}
+  .legal-band{border-top:1px solid var(--hairline);padding:24px 0 32px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .legal-band .left{font:400 13px/1.23 var(--font);color:var(--muted)}
+  .legal-band .left a{text-decoration:underline}
+  .legal-band .right{display:flex;align-items:center;gap:16px;font:600 13px/1.23 var(--font);color:var(--ink)}
+
+  /* ---- responsive ---- */
+  @media (max-width:1128px){
+    .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+  }
+  @media (max-width:744px){
+    .wrap{padding:0 20px}
+    .product-tabs{display:none}
+    .hero{padding:40px 0 4px}
+    .hero h1{font-size:24px}
+    .search-bar{height:58px}
+    .seg{padding:6px 14px}
+    .seg-cat{display:none}
+    .seg-div{display:none}
+    .cat-strip{position:static}
+    .footer-cols{grid-template-columns:1fr}
+    .nav-right .host-link{display:none}
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- top nav -->
+<header class="top-nav">
+  <div class="wrap top-nav-inner">
+    <a class="brand" href="#top">
+      <img src="assets/logos/favicon-256.png" alt="AI ROASTING 로고">
+      <span>MCP 허브</span>
+    </a>
+    <nav class="product-tabs" aria-label="주 메뉴">
+      <a class="product-tab active" href="#top"><span class="tab-icon">🔌</span>허브</a>
+      <a class="product-tab" href="https://modelcontextprotocol.io" target="_blank" rel="noopener"><span class="tab-icon">📖</span>MCP란?</a>
+      <a class="product-tab" href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener" style="position:relative"><span class="tab-icon">✍️</span>등록하기<span class="new-tag">NEW</span></a>
+    </nav>
+    <div class="nav-right">
+      <a class="host-link" href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">GitHub에서 보기</a>
+      <span class="icon-circle"><img src="assets/logos/favicon-256.png" alt=""></span>
+    </div>
+  </div>
+</header>
+
+<!-- hero -->
+<div class="wrap">
+  <div class="hero">
+    <h1>AI에 연결할 수 있는 모든 것을 한 곳에서.</h1>
+    <p>MCP(Model Context Protocol)는 AI를 외부 데이터·서비스에 연결하는 표준 방식입니다. 비즈니스 리더용 커넥터를 공시·법령부터 미국 판례까지 GitHub 소스로 모았습니다.</p>
+  </div>
+
+  <!-- pill search -->
+  <div class="search-wrap">
+    <div class="search-bar">
+      <div class="seg" onclick="document.getElementById('search').focus()">
+        <label for="search">검색</label>
+        <input id="search" placeholder="커넥터 이름이나 설명" autocomplete="off">
+      </div>
+      <button class="search-clear" id="clear" hidden aria-label="검색 지우기">×</button>
+      <span class="seg-div"></span>
+      <div class="seg seg-cat">
+        <label for="cat-select">카테고리</label>
+        <select id="cat-select" aria-label="카테고리로 이동">
+          <option value="">전체 보기</option>
+        </select>
+      </div>
+      <button class="search-orb" id="go" aria-label="검색">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      </button>
+    </div>
+  </div>
+  <p class="hero-stat"><span id="stat-count">75</span>개의 커넥터 · 스타·포크는 GitHub 실측값 (2026-07-16 기준)</p>
+  <div class="quick" id="quick"><span class="label">자주 찾는</span></div>
+</div>
+
+<!-- category strip -->
+<div class="cat-strip">
+  <div class="wrap cat-strip-inner">
+    <div class="chips" id="chips"></div>
+    <div class="sortgroup">
+      <span class="label">정렬</span>
+      <div class="seg-sort" id="seg">
+        <button data-sort="스타순">스타순</button>
+        <button data-sort="포크순">포크순</button>
+        <button data-sort="이름순">이름순</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- results -->
+<div class="wrap">
+  <div class="results" id="results"></div>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h3>이용 안내</h3>
+        <span>바로 사용 — 설치하면 즉시 동작</span>
+        <span>로그인만 필요 — 해당 서비스 계정으로 인증</span>
+        <span>API 발급 필요 — 무료 API 키 신청 후 사용</span>
+      </div>
+      <div class="footer-col">
+        <h3>참여하기</h3>
+        <a href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">커넥터 등록하기</a>
+        <a href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">awesome-mcp-korea</a>
+        <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP 공식 문서</a>
+      </div>
+      <div class="footer-col">
+        <h3>AI ROASTING</h3>
+        <a href="#top">MCP 허브</a>
+        <a href="https://github.com/airoasting/dart" target="_blank" rel="noopener">DART 리포트 스킬</a>
+      </div>
+    </div>
+    <div class="legal-band">
+      <span class="left">© 2026 AI ROASTING · 모든 카드는 오픈소스 저장소로 연결됩니다.</span>
+      <span class="right">🌐 한국어 (KR)</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* [name, mono, category, badge(데이터 출처), stars, forks, desc, github repo/경로, auth]
+   stars/forks: GitHub API 실측값 (2026-07-16 기준)
+   auth — api: API 키 발급 필요 · login: 서비스 계정 로그인/토큰만 필요 · none: 바로 사용
+   대상 독자: 비즈니스 리더 — 개발자 전용 도구(클라우드 인프라·DB·코딩 에이전트류)는 등재하지 않는다
+   분류 원칙(MECE): 업무 도메인 단일 축 10개. 지역 구분은 카테고리가 아니라 출처 배지로 표현한다.
+   특정 도메인(법률·부동산 등)이 있으면 그 도메인으로, 범용 포털·통계는 경제·통계로 분류한다. 날씨는 생활·여행에 포함.
+   큐레이션: 같은 데이터 출처(법제처·기상청·OpenDART 등)는 스타 최다 저장소 1개만 등재
+   등재 기준: MCP 서버만 등재한다. 에이전트 스킬·플러그인 모음은 넣지 않는다 (MCP를 포함한 이중 인터페이스는 허용).
+   예외: k-skill(NomaDamas) 중 "사용자 로그인 필요" 스킬 14개 — 타 사이트 로그인 세션 기반 자동화라 사용자 지정으로 등재.
+     스타/포크는 모음집 저장소 전체 값이며, 링크는 각 스킬 폴더로 연결된다.
+   제외: workbookbulb863/korean-law-alio-mcp, ChangooLee/mcp-kr-realestate, Shopify/dev-mcp (404/비공개) */
+const DATA = [
+  // 법률·특허 — 법령·판례·의회·규제·지식재산
+  ["korean-law-mcp","K","법률·특허","법제처",2222,430,"법령·판례·행정규칙 검색·조회·분석","chrisryugj/korean-law-mcp","api"],
+  ["iros-registry-automation","I","법률·특허","인터넷등기소",6244,717,"법인·부동산 등기부등본 열람 자동화 스킬","NomaDamas/k-skill/tree/main/iros-registry-automation","login"],
+  ["court-payment-order-assistant","C","법률·특허","법원 전자소송",6244,717,"지급명령 신청 정보 정리와 초안 작성 스킬","NomaDamas/k-skill/tree/main/court-payment-order-assistant","login"],
+  ["assembly-api-mcp","A","법률·특허","국회",81,30,"국회 의안·회의록·청원 등 276개 API 접근","hollobit/assembly-api-mcp","api"],
+  ["korean-patent-mcp","K","법률·특허","특허청",40,9,"특허·실용신안·상표·디자인 검색 7개 도구","chrisryugj/korean-patent-mcp","api"],
+  ["us-legal-mcp","U","법률·특허","미국 의회",34,10,"미국 연방 법률·의회 법안 정보 조회","JamesANZ/us-legal-mcp","api"],
+  ["us-legal-tools","U","법률·특허","US 법률",14,3,"미국 법령·판례 검색 도구 모음","beshkenadze/us-legal-tools","api"],
+  ["courtlistener-mcp","C","법률·특허","CourtListener",13,6,"미국 판례·소송 기록 데이터베이스 검색","blakeox/courtlistener-mcp","api"],
+  ["koregx","K","법률·특허","식약처·복지부",0,0,"헬스케어 법령·행정해석·HIRA 결정 통합 조회","DrMoony/koregx","api"],
+  ["federal-register-mcp","F","법률·특허","연방관보",0,0,"미국 연방관보 행정명령·규제 검색","aml25/federal-register-mcp","none"],
+  // 금융·투자 — 공시·주식·결제·세무
+  ["financial-datasets-mcp","F","금융·투자","Financial Datasets",2240,343,"주가·재무제표·공시 데이터 공식 서버","financial-datasets/mcp-server","api"],
+  ["stripe/ai","S","금융·투자","Stripe",1682,303,"결제·구독·고객 데이터 에이전트 도구","stripe/ai","api"],
+  ["alpaca-mcp-server","A","금융·투자","Alpaca",874,257,"주식·ETF·암호화폐 시세 조회와 거래 공식 서버","alpacahq/alpaca-mcp-server","api"],
+  ["yahoo-finance2","Y","금융·투자","Yahoo Finance",766,105,"야후 파이낸스 시세·재무 데이터 조회","gadicc/yahoo-finance2","none"],
+  ["mcp_massive","M","금융·투자","Massive",366,104,"미국 주식·옵션 시장 데이터 (구 Polygon)","massive-com/mcp_massive","api"],
+  ["sec-edgar-mcp","S","금융·투자","SEC EDGAR",333,92,"미국 상장사 공시·재무를 EDGAR에서 조회","stefanoamorelli/sec-edgar-mcp","none"],
+  ["Equibles","E","금융·투자","SEC·FINRA·FRED 외",179,21,"셀프호스팅 미니 블룸버그 터미널","daniel3303/Equibles","api"],
+  ["paypal/agent-toolkit","P","금융·투자","PayPal",188,107,"거래·정산 조회 공식 에이전트 도구","paypal/agent-toolkit","api"],
+  ["korea-stock-mcp","K","금융·투자","금융감독원·한국거래소",157,34,"DART 공시와 KRX 시세로 한국 주식 분석","jjlabsio/korea-stock-mcp","api"],
+  ["korean-dart-mcp","K","금융·투자","금융감독원",83,14,"DART 공시·재무·지분·XBRL을 15개 도구로 조회","chrisryugj/korean-dart-mcp","api"],
+  ["dart","D","금융·투자","금융감독원",22,15,"상장사 실적을 애널리스트급 HTML 리포트로 생성하는 스킬","airoasting/dart","api"],
+  ["korea-finance-mcp","K","금융·투자","한국은행·국토부·금감원 외",54,8,"거시지표·실거래가·공시·시세 통합 조회","emceeKim/korea-finance-mcp","api"],
+  ["KIS_MCP_Server","K","금융·투자","한국투자증권",25,17,"국내외 주식 시세 조회와 주문 기능","migusdn/KIS_MCP_Server","api"],
+  ["mcp-lsopenapi","M","금융·투자","LS증권",2,1,"국내 주식 시세·차트·지표를 자연어로 조회","redoxnet/mcp-lsopenapi","api"],
+  ["toss-securities","T","금융·투자","토스증권",6244,717,"계좌·주식 정보 조회 공식 Open API 스킬","NomaDamas/k-skill/tree/main/toss-securities","login"],
+  ["popbill","P","금융·투자","팝빌",6244,717,"전자세금계산서·현금영수증 등 업무 API 스킬","NomaDamas/k-skill/tree/main/popbill","api"],
+  // 경제·통계 — 통계·경제지표·범용 공공데이터 포털
+  ["data-go-mcp-servers","D","경제·통계","공공데이터포털",288,51,"data.go.kr API를 패키지별 MCP 서버로 제공","Koomook/data-go-mcp-servers","api"],
+  ["fred-mcp-server","F","경제·통계","미 연준 FRED",108,34,"미 연준 FRED 경제지표·통계 조회","stefanoamorelli/fred-mcp-server","api"],
+  ["us-gov-open-data-mcp","U","경제·통계","미국 정부",103,20,"미국 정부 데이터 API 40여 종, 250개 도구","lzinga/us-gov-open-data-mcp","api"],
+  ["us-census-data-api-mcp","U","경제·통계","미국 인구조사국",85,27,"미국 인구·경제 센서스 통계 공식 서버","uscensusbureau/us-census-bureau-data-api-mcp","api"],
+  ["korea-stats-mcp","K","경제·통계","국가데이터처",12,11,"자연어로 KOSIS 국가통계 조회","Dayoooun/korea-stats-mcp","api"],
+  ["be-node-seoul-data-mcp","B","경제·통계","서울시",1,1,"지하철 승하차·문화행사 등 서울 공공데이터","pinnaclesoft-ko/be-node-seoul-data-mcp","api"],
+  ["bok-ecos-mcp","B","경제·통계","한국은행",1,0,"한국은행 ECOS 경제통계 조회","hyeonseo2/bok-ecos-mcp","api"],
+  // 부동산
+  ["real-estate-mcp","R","부동산","국토교통부",361,59,"부동산 매매·전월세·청약 정보 제공","tae0y/real-estate-mcp","api"],
+  ["archhub-mcp","A","부동산","국토교통부",52,7,"건축물대장·건축인허가·노후건축물 분석","chrisryugj/archhub-mcp","none"],
+  ["zillow-mcp-server","Z","부동산","Zillow",46,9,"미국 부동산 시세·매물 데이터 조회","sap156/zillow-mcp-server","api"],
+  // 지도·교통
+  ["srt-booking","S","지도·교통","SRT",6244,717,"SRT 열차 조회·예약·예약 확인·취소 스킬","NomaDamas/k-skill/tree/main/srt-booking","login"],
+  ["ktx-booking","K","지도·교통","코레일",6244,717,"KTX 열차 조회·좌석 확인·예약·취소 스킬","NomaDamas/k-skill/tree/main/ktx-booking","login"],
+  ["korean-transit-route","K","지도·교통","ODsay",6244,717,"지하철+버스 대중교통 길찾기 스킬","NomaDamas/k-skill/tree/main/korean-transit-route","api"],
+  ["hipass-receipt","H","지도·교통","하이패스",6244,717,"하이패스 사용내역 조회와 영수증 발급 스킬","NomaDamas/k-skill/tree/main/hipass-receipt","login"],
+  ["kakao-api-mcp-server","K","지도·교통","카카오",16,5,"카카오맵 장소 검색·좌표 변환·길찾기","jeong-sik/kakao-api-mcp-server","api"],
+  ["mcp-naver-map","M","지도·교통","네이버 클라우드",7,2,"IP 기반 위치 조회와 드라이빙 경로 탐색","yeonupark/mcp-naver-map","api"],
+  ["k-targo-subway-mcp","K","지도·교통","국토교통부",1,1,"전국 지하철 역 검색과 시간표 조회","slicequeue/k-targo-subway-mcp-server","api"],
+  // 검색·리서치
+  ["exa-mcp-server","E","검색·리서치","Exa",4728,358,"AI 특화 웹 검색 엔진","exa-labs/exa-mcp-server","api"],
+  ["tavily-mcp","T","검색·리서치","Tavily",2223,283,"실시간 웹 검색·콘텐츠 추출","tavily-ai/tavily-mcp","api"],
+  ["brave-search-mcp-server","B","검색·리서치","Brave",1301,183,"프라이버시 중심 웹 검색 공식 서버","brave/brave-search-mcp-server","api"],
+  ["kagimcp","K","검색·리서치","Kagi",446,44,"광고 없는 프리미엄 검색","kagisearch/kagimcp","api"],
+  ["arxiv-mcp-server","A","검색·리서치","arXiv",2961,237,"arXiv 논문 검색·분석","blazickjp/arxiv-mcp-server","none"],
+  ["naver-search-mcp","N","검색·리서치","네이버",79,26,"네이버 검색·데이터랩 트렌드 분석","isnow890/naver-search-mcp","api"],
+  ["naver-ad-performance","N","검색·리서치","네이버 검색광고",6244,717,"검색광고 노출·클릭·전환 성과 조회 스킬","NomaDamas/k-skill/tree/main/naver-ad-performance","api"],
+  // 생활·여행 — 소비·식품·문화·관광·날씨
+  ["daiso-mcp","D","생활·여행","다이소",310,21,"주변 다이소 매장 검색과 상품 재고·가격 조회","hmmhmmhm/daiso-mcp","none"],
+  ["mcp-weather","M","생활·여행","AccuWeather",36,30,"전 세계 시간별 일기예보 조회","adhikasp/mcp-weather","api"],
+  ["korea_weather","K","생활·여행","기상청",11,6,"기상청 단기예보 API로 날씨 정보 제공","ohhan777/korea_weather","api"],
+  ["schoolinfo-mcp","S","생활·여행","학교알리미",41,10,"학교 급식·학생수·수행평가 등 공시정보 확인","chrisryugj/schoolinfo-mcp","api"],
+  ["kr-pc-deals-mcp","K","생활·여행","다나와·컴퓨존",10,1,"PC 부품 최저가 비교와 호환성 체크","edward-kim-dev/kr-pc-deals-mcp","none"],
+  ["mcp-korea-tourism-api","M","생활·여행","한국관광공사",9,5,"관광지·행사·숙박·맛집 정보 검색","harimkang/mcp-korea-tourism-api","api"],
+  ["data4library-mcp","D","생활·여행","도서관정보나루",8,2,"공공도서관 검색·대출 현황·독서 통계","isnow890/data4library-mcp","api"],
+  ["k-mfds-fooddb-mcp","K","생활·여행","식약처",5,3,"식품영양성분 DB 검색·조회","slicequeue/k-mfds-fooddb-mcp-server","api"],
+  ["foresttrip-vacancy","F","생활·여행","숲나들e",6244,717,"자연휴양림 예약 가능 객실 조회 스킬","NomaDamas/k-skill/tree/main/foresttrip-vacancy","login"],
+  ["catchtable-sniper","C","생활·여행","캐치테이블",6244,717,"빈자리 감시와 자동 예약 시도 스킬","NomaDamas/k-skill/tree/main/catchtable-sniper","login"],
+  ["yebigun-training","Y","생활·여행","예비군",6244,717,"예비군 훈련 일정·장소 조회 스킬","NomaDamas/k-skill/tree/main/yebigun-training","login"],
+  // 채용·HR
+  ["linkedin-mcp-server","L","채용·HR","LinkedIn",2797,487,"링크드인 프로필·구인 정보 조회","stickerdaniel/linkedin-mcp-server","login"],
+  ["jobkorea-talent-search","J","채용·HR","잡코리아",6244,717,"기업회원 인재검색과 후보 shortlist 스킬","NomaDamas/k-skill/tree/main/jobkorea-talent-search","login"],
+  ["saramin-talent-search","S","채용·HR","사람인",6244,717,"기업회원 인재풀 검색과 shortlist 스킬","NomaDamas/k-skill/tree/main/saramin-talent-search","login"],
+  // 영업·CRM
+  ["salesforcecli/mcp","S","영업·CRM","Salesforce",440,104,"세일즈포스 조직 데이터·메타데이터 공식 서버","salesforcecli/mcp","login"],
+  ["mcp-hubspot","M","영업·CRM","HubSpot",128,61,"허브스팟 CRM 고객·거래 데이터 연동","baryhuang/mcp-hubspot","api"],
+  // 문서·협업 — 문서 처리·언어·협업 도구
+  ["excel-mcp-server","E","문서·협업","Excel",4033,446,"엑셀 파일 생성·수정·차트·피벗 조작","haris-musa/excel-mcp-server","none"],
+  ["Office-PowerPoint-MCP","O","문서·협업","PowerPoint",1838,236,"파워포인트 생성·편집 자동화","GongRzhe/Office-PowerPoint-MCP-Server","none"],
+  ["notebooklm-mcp-cli","N","문서·협업","NotebookLM",5478,844,"NotebookLM 노트북을 조회·질의하는 CLI+MCP","jacob-bd/notebooklm-mcp-cli","login"],
+  ["notion-mcp-server","N","문서·협업","Notion",4531,600,"문서·위키·데이터베이스 공식 서버","makenotion/notion-mcp-server","login"],
+  ["kordoc","K","문서·협업","HWP·PDF",1450,276,"한글·PDF 문서 파싱과 표 추출 등 7개 도구","chrisryugj/kordoc","none"],
+  ["ko-stdict-mcp","K","문서·협업","국립국어원",25,2,"표준국어대사전 표제어·뜻풀이·용례 조회","dahlia/ko-stdict-mcp","none"],
+  ["mcp-korean-spell","M","문서·협업","네이버 맞춤법",24,4,"한국어 맞춤법·문법 교정","winterjung/mcp-korean-spell","none"],
+  ["dooray-mcp","D","문서·협업","두레이",6,5,"메신저 전송·캘린더 조회·일정 등록","dooray-go/dooray-mcp","login"],
+  ["naver-works-mcp","N","문서·협업","네이버웍스",1,0,"네이버 웍스 API 연동","hyeri0903/naver-works-mcp","login"],
+];
+
+const CATS = ["법률·특허","금융·투자","경제·통계","부동산","지도·교통","검색·리서치","생활·여행","채용·HR","영업·CRM","문서·협업"];
+
+const QUICK_PICKS = ["DART","법령","판례","검색","날씨"];
+
+const state = { query: "", category: "전체", sort: "스타순" };
+
+const fmtK = n => n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "k" : String(n);
+const esc = s => s.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+const AUTH_LABELS = { api: "API 발급 필요", login: "로그인만 필요", none: "바로 사용" };
+
+const ICON_STAR = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>';
+const ICON_HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+
+function enrich(row) {
+  const [name, mono, category, badge, stars, forks, desc, repo, auth] = row;
+  const owner = repo.split("/")[0];
+  return {
+    name, mono, category, desc, owner, auth,
+    authLabel: AUTH_LABELS[auth],
+    url: "https://github.com/" + repo,
+    avatar: "https://github.com/" + owner + ".png?size=240",
+    badge, repo,
+    starStr: fmtK(stars), forkStr: fmtK(forks),
+    _stars: stars, _forks: forks,
+  };
+}
+
+const ALL = DATA.map(enrich);
+const CAT_COUNTS = {};
+ALL.forEach(m => { CAT_COUNTS[m.category] = (CAT_COUNTS[m.category] || 0) + 1; });
+
+/* ---- wishlist (heart) ---- */
+const SAVED_KEY = "mcp-hub-saved";
+let saved = new Set();
+try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || "[]")); } catch (e) {}
+function toggleSaved(repo) {
+  saved.has(repo) ? saved.delete(repo) : saved.add(repo);
+  try { localStorage.setItem(SAVED_KEY, JSON.stringify([...saved])); } catch (e) {}
+}
+
+/* ---- render ---- */
+function renderChips() {
+  document.getElementById("chips").innerHTML = ["전체", ...CATS].map(label => {
+    const cnt = label === "전체" ? ALL.length : (CAT_COUNTS[label] || 0);
+    return `<button class="chip${state.category === label ? " active" : ""}" data-cat="${esc(label)}">${esc(label)}<span class="cnt">${cnt}</span></button>`;
+  }).join("");
+}
+
+function renderSort() {
+  document.querySelectorAll(".seg-sort button").forEach(b =>
+    b.classList.toggle("active", b.dataset.sort === state.sort));
+}
+
+function renderSearchAffordance() {
+  document.getElementById("clear").hidden = state.query.trim().length === 0;
+}
+
+function cardHTML(m) {
+  return `
+  <a class="card" href="${m.url}" target="_blank" rel="noopener">
+    <div class="card-photo">
+      <img src="${m.avatar}" alt="" loading="lazy" onerror="this.remove()">
+      <span class="fav-badge">${m.authLabel}</span>
+      <button class="heart${saved.has(m.repo) ? " saved" : ""}" data-repo="${esc(m.repo)}" aria-label="저장">${ICON_HEART}</button>
+    </div>
+    <div class="card-meta">
+      <div class="card-line1">
+        <span class="card-title">${esc(m.name)}</span>
+        <span class="card-rating">${ICON_STAR}${m.starStr}</span>
+      </div>
+      <div class="card-sub">${esc(m.badge)} · @${esc(m.owner)}</div>
+      <div class="card-desc">${esc(m.desc)}</div>
+      <div class="card-price"><b>포크 ${m.forkStr}</b> · GitHub</div>
+    </div>
+  </a>`;
+}
+
+function renderResults() {
+  const q = state.query.trim().toLowerCase();
+
+  let items = ALL;
+  if (q) items = items.filter(m => (m.name + " " + m.desc).toLowerCase().includes(q));
+  items = items.slice().sort((a, b) =>
+    state.sort === "이름순" ? a.name.localeCompare(b.name)
+    : state.sort === "포크순" ? b._forks - a._forks
+    : b._stars - a._stars);
+
+  const sections = CATS.map(name => ({ name, items: items.filter(m => m.category === name) }))
+    .filter(s => s.items.length);
+
+  const el = document.getElementById("results");
+  if (!sections.length) {
+    el.innerHTML = `
+      <div class="empty">
+        <div class="msg">“${esc(state.query)}”에 해당하는 커넥터가 없습니다.</div>
+        <div class="sub">다른 검색어를 입력하거나 검색을 초기화하세요.</div>
+        <button id="reset">검색 초기화</button>
+      </div>`;
+    document.getElementById("reset").addEventListener("click", clearSearch);
+    return;
+  }
+  el.innerHTML = sections.map(sec => `
+    <div class="section" id="sec-${CATS.indexOf(sec.name)}">
+      <div class="section-head">
+        <h2>${esc(sec.name)}</h2>
+        <span class="count">커넥터 ${sec.items.length}개</span>
+      </div>
+      <div class="grid">${sec.items.map(cardHTML).join("")}</div>
+    </div>`).join("");
+}
+
+function render() {
+  renderChips();
+  renderSort();
+  renderSearchAffordance();
+  renderResults();
+}
+
+/* ---- interactions ---- */
+const searchInput = document.getElementById("search");
+
+function clearSearch() {
+  state.query = "";
+  searchInput.value = "";
+  renderSearchAffordance();
+  renderResults();
+  searchInput.focus();
+}
+
+searchInput.addEventListener("input", e => {
+  state.query = e.target.value;
+  renderSearchAffordance();
+  renderResults();
+});
+
+document.getElementById("clear").addEventListener("click", clearSearch);
+document.getElementById("go").addEventListener("click", () => {
+  document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+window.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+});
+
+/* 하트 저장: 카드 링크 클릭과 분리 */
+document.getElementById("results").addEventListener("click", e => {
+  const heart = e.target.closest(".heart");
+  if (!heart) return;
+  e.preventDefault();
+  e.stopPropagation();
+  toggleSaved(heart.dataset.repo);
+  heart.classList.toggle("saved");
+});
+
+/* 카테고리 칩: 해당 섹션으로 부드럽게 스크롤 */
+document.getElementById("chips").addEventListener("click", e => {
+  const btn = e.target.closest(".chip");
+  if (!btn) return;
+  state.category = btn.dataset.cat;
+  renderChips();
+  const target = btn.dataset.cat === "전체"
+    ? document.getElementById("results")
+    : document.getElementById("sec-" + CATS.indexOf(btn.dataset.cat));
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+/* 검색바 카테고리 세그먼트 → 섹션 이동 */
+const catSelect = document.getElementById("cat-select");
+CATS.forEach(name => {
+  const o = document.createElement("option");
+  o.value = name; o.textContent = name;
+  catSelect.appendChild(o);
+});
+catSelect.addEventListener("change", () => {
+  const name = catSelect.value;
+  state.category = name || "전체";
+  renderChips();
+  const target = name
+    ? document.getElementById("sec-" + CATS.indexOf(name))
+    : document.getElementById("results");
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.querySelectorAll(".seg-sort button").forEach(b =>
+  b.addEventListener("click", () => { state.sort = b.dataset.sort; render(); }));
+
+/* quick picks */
+const quickEl = document.getElementById("quick");
+QUICK_PICKS.forEach(name => {
+  const b = document.createElement("button");
+  b.textContent = name;
+  b.addEventListener("click", () => {
+    state.category = "전체";
+    state.query = name;
+    searchInput.value = name;
+    render();
+  });
+  quickEl.appendChild(b);
+});
+
+/* ---- init ---- */
+document.getElementById("stat-count").textContent = ALL.length;
+render();
+</script>
+</body>
+</html>

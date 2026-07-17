@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP 허브 | AI ROASTING</title>
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logos/favicon-256.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/logos/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Black+Han+Sans&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ============ Discord marketing system — arcade-loud on deep indigo ============
+     canvas #0a0d3a · surface-indigo #1e2353 · onyx #23272a · black #000
+     blurple #5865f2 (brand/CTA) · green #35ed7e (high-intent) · magenta #ec48bd (feature)
+     link cyan #00b0f4 · white text. Depth from colour+gradient+radius, not shadow. */
+  :root{
+    --canvas:#0a0d3a; --surface:#1e2353; --surface-2:#272d63; --onyx:#23272a; --black:#000;
+    --blurple:#5865f2; --blurple-bright:#7983f5; --green:#35ed7e; --magenta:#ec48bd; --violet:#8b5cf6;
+    --link:#00b0f4; --ink:#fff; --ink-dark:#04061c; --muted:#a9b0e0;
+    --disp:'Space Grotesk','Black Han Sans',sans-serif;
+    --kdisp:'Black Han Sans','Space Grotesk',sans-serif;
+    --body:'Inter','Noto Sans KR',sans-serif;
+    --r-sm:12px; --r-md:14px; --r-lg:16px; --r-xl:40px; --r-pill:50px; --r-jumbo:120px;
+    --sh-float:0 3px 68px rgba(69,42,124,.5);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--body);
+    word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  input{font-family:var(--body)}
+  :focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+  /* ---- animated brand-gradient mesh : the atmospheric signature ---- */
+  .mesh{position:fixed;inset:-30% -10%;z-index:-1;pointer-events:none;filter:blur(10px);
+    background:
+      radial-gradient(38% 44% at 18% 20%,rgba(88,101,242,.55),transparent 60%),
+      radial-gradient(42% 40% at 82% 12%,rgba(236,72,189,.42),transparent 62%),
+      radial-gradient(45% 45% at 70% 78%,rgba(139,92,246,.42),transparent 60%),
+      radial-gradient(40% 40% at 25% 82%,rgba(88,101,242,.38),transparent 62%);
+    animation:drift 22s ease-in-out infinite alternate}
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(3%,-2%,0) scale(1.08)}
+    100%{transform:translate3d(-3%,3%,0) scale(1.04)}}
+  @media (prefers-reduced-motion:reduce){.mesh{animation:none}}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+  /* ---- nav ---- */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+    background:rgba(10,13,58,.72);border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav-in{display:flex;align-items:center;gap:20px;height:68px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;
+    font-size:19px;letter-spacing:-.5px}
+  .brand img{width:30px;height:30px;border-radius:9px}
+  .brand span{color:var(--ink)}
+  .brand .r{color:var(--magenta)}
+  .nav-links{display:flex;gap:26px;margin-left:14px;flex:1}
+  .nav-links a{font-weight:600;font-size:16px;color:var(--muted);transition:color .15s}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;border:none;
+    font-family:var(--body);transition:transform .12s,filter .15s;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn-green{background:var(--green);color:var(--ink-dark);font-size:16px;border-radius:var(--r-sm);
+    padding:11px 22px}
+  .btn-green:hover{filter:brightness(1.08)}
+  .btn-blurple{background:var(--blurple);color:var(--ink);font-size:17px;border-radius:var(--r-sm);
+    padding:14px 26px}
+  .btn-blurple:hover{background:var(--blurple-bright)}
+  .btn-ghost{background:var(--surface);color:var(--ink);font-size:16px;border-radius:var(--r-lg);padding:13px 22px}
+  .btn-ghost:hover{background:var(--surface-2)}
+  @media (max-width:820px){.nav-links{display:none}}
+
+  /* ---- hero ---- */
+  .hero{padding:74px 0 54px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--surface);
+    color:var(--magenta);font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;
+    padding:8px 16px;border-radius:var(--r-pill);margin-bottom:22px}
+  .hero-eyebrow b{color:var(--ink)}
+  .hero h1{margin:0 0 20px;font-family:var(--kdisp);font-weight:400;font-size:80px;line-height:.98;
+    letter-spacing:-1px;text-transform:none}
+  .hero h1 .en{font-family:var(--disp);font-weight:700}
+  .hero-sub{margin:0 0 30px;font-size:20px;line-height:1.5;color:var(--muted);max-width:560px}
+  .hero-sub b{color:var(--ink);font-weight:600}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  /* counter stat card */
+  .stat{flex:none;background:var(--blurple);border-radius:var(--r-xl);padding:38px 44px;text-align:center;
+    box-shadow:var(--sh-float);position:relative;overflow:hidden}
+  .stat::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(80% 60% at 70% 0%,rgba(255,255,255,.22),transparent 60%)}
+  .stat .big{font-family:var(--disp);font-weight:700;font-size:88px;line-height:.9;letter-spacing:-2px}
+  .stat .unit{margin-top:10px;font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;
+    color:rgba(255,255,255,.8)}
+  @media (max-width:900px){.hero{grid-template-columns:1fr;padding:48px 0 40px}
+    .hero h1{font-size:56px}.stat{justify-self:start}.stat .big{font-size:68px}}
+  @media (max-width:560px){.hero h1{font-size:44px}.hero-sub{font-size:18px}}
+
+  /* ---- marquee band ---- */
+  .marquee{background:var(--blurple);overflow:hidden;padding:16px 0;margin:8px 0 44px;
+    transform:rotate(-1.2deg) scale(1.03)}
+  .marquee-track{display:flex;gap:0;white-space:nowrap;animation:scroll 26s linear infinite;
+    font-family:var(--disp);font-weight:700;font-size:34px;letter-spacing:.5px;text-transform:uppercase}
+  .marquee-track span{padding:0 26px}
+  .marquee-track .dot{color:var(--green)}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+  /* ---- search ---- */
+  .searchrow{display:flex;gap:14px;align-items:center;margin-bottom:26px;flex-wrap:wrap}
+  .search{flex:1;min-width:260px;display:flex;align-items:center;gap:12px;background:var(--surface);
+    border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);padding:15px 20px}
+  .search:focus-within{border-color:var(--blurple-bright)}
+  .search svg{width:20px;height:20px;fill:var(--muted);flex:none}
+  .search input{flex:1;border:none;background:transparent;color:var(--ink);font-size:17px}
+  .search input::placeholder{color:var(--muted)}
+  .search input:focus{outline:none}
+  .search-clear{border:none;background:var(--surface-2);color:var(--ink);width:26px;height:26px;
+    border-radius:50%;cursor:pointer;font-size:15px;flex:none;display:none}
+  .search-clear.show{display:flex;align-items:center;justify-content:center}
+
+  /* ---- quick picks ---- */
+  .quick{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+  .quick .lbl{font-weight:600;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .quick button{font-family:var(--body);font-weight:700;font-size:15px;color:var(--ink);cursor:pointer;
+    background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-pill);
+    padding:10px 20px;transition:transform .12s,background .15s}
+  .quick button:hover{background:var(--surface-2)}
+  .quick button:active{transform:translateY(1px)}
+  .quick button.active{background:var(--magenta);border-color:transparent;color:var(--ink)}
+
+  /* ---- category chips (sticky) ---- */
+  .chipbar{position:sticky;top:68px;z-index:40;background:rgba(10,13,58,.82);backdrop-filter:blur(12px);
+    margin:0 -24px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .chips{display:flex;gap:9px;flex-wrap:wrap}
+  .chip{font-family:var(--body);font-weight:700;font-size:15px;color:var(--muted);cursor:pointer;
+    background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:var(--r-pill);
+    padding:9px 17px;display:inline-flex;align-items:center;gap:8px;transition:all .15s}
+  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+  .chip .cnt{font-size:12px;opacity:.7}
+  .chip.active{background:var(--blurple);border-color:transparent;color:var(--ink)}
+  .chip.active .cnt{opacity:.9}
+  @media (max-width:820px){.chipbar{position:static;top:auto}}
+
+  /* ---- section ---- */
+  .section{padding-top:44px}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+  .section-head h2{margin:0;font-family:var(--kdisp);font-weight:400;font-size:34px;letter-spacing:-.5px}
+  .section-head .n{font-family:var(--disp);font-weight:700;font-size:18px;color:var(--magenta)}
+
+  /* ---- card grid ---- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:620px){.grid{grid-template-columns:1fr}}
+
+  .card{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid rgba(255,255,255,.06);
+    border-radius:var(--r-xl);padding:24px;transition:transform .16s ease,background .16s,border-color .16s}
+  .card:hover{transform:translateY(-4px);background:var(--surface-2);border-color:rgba(120,131,245,.45)}
+  @media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+  .card-head{display:flex;align-items:center;gap:14px;min-width:0}
+  .card-thumb{width:56px;height:56px;flex:none;border-radius:var(--r-lg);overflow:hidden;position:relative;
+    background:var(--canvas)}
+  .card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .card-headtxt{min-width:0;flex:1}
+  .card-name{display:block;font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.3px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card:hover .card-name{color:var(--blurple-bright)}
+  .card-meta{display:flex;align-items:center;gap:9px;margin-top:6px;min-width:0}
+  .badge{flex:none;background:var(--magenta);color:var(--ink);font-weight:700;font-size:12.5px;
+    padding:4px 11px;border-radius:var(--r-lg);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .card-owner{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-family:var(--disp)}
+  .card-desc{font-size:15px;line-height:1.55;color:var(--muted);min-height:46px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-foot{display:flex;align-items:center;gap:12px;padding-top:16px;margin-top:auto;
+    border-top:1px solid rgba(255,255,255,.07)}
+  .auth{flex:none;font-weight:700;font-size:13px;padding:6px 12px;border-radius:var(--r-pill)}
+  .auth-none{background:var(--green);color:var(--ink-dark)}
+  .auth-login{background:var(--blurple);color:var(--ink)}
+  .auth-api{background:transparent;color:var(--magenta);border:1px solid var(--magenta)}
+  .stats{display:flex;align-items:center;gap:14px;margin-left:auto;font-family:var(--disp);
+    font-weight:700;font-size:14px;color:var(--muted)}
+  .stats span{display:inline-flex;align-items:center;gap:5px}
+  .stats svg{width:16px;height:16px;fill:currentColor}
+  .stats .star svg{fill:var(--green)}
+  .card-go{flex:none;width:34px;height:34px;border-radius:50%;background:var(--blurple);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+  .card:hover .card-go{background:var(--blurple-bright)}
+
+  /* ---- auth legend ---- */
+  .legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);
+    border-radius:var(--r-lg);padding:16px 20px;margin-bottom:8px}
+  .legend .lbl{font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .legend .t{font-size:14px;color:var(--muted);margin-right:8px}
+
+  /* ---- empty ---- */
+  .empty{background:var(--surface);border-radius:var(--r-xl);padding:64px 24px;text-align:center}
+  .empty .msg{font-family:var(--disp);font-weight:700;font-size:24px;margin-bottom:8px}
+  .empty .sub{color:var(--muted);font-size:16px}
+  .empty button{margin-top:22px}
+
+  /* ---- cta band ---- */
+  .ctaband{margin:70px 0 0;background:var(--blurple);border-radius:var(--r-xl);padding:56px 48px;
+    text-align:center;position:relative;overflow:hidden}
+  .ctaband::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(60% 90% at 85% 10%,rgba(236,72,189,.4),transparent 55%)}
+  .ctaband > *{position:relative}
+  .ctaband h2{margin:0 0 12px;font-family:var(--kdisp);font-weight:400;font-size:46px;letter-spacing:-.5px}
+  .ctaband p{margin:0 0 28px;font-size:19px;color:rgba(255,255,255,.85)}
+  @media (max-width:560px){.ctaband{padding:40px 24px}.ctaband h2{font-size:34px}}
+
+  /* ---- footer ---- */
+  .footer{padding:48px 0 24px;margin-top:20px}
+  .footer-top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .footer-brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:18px}
+  .footer-brand img{width:28px;height:28px;border-radius:8px}
+  .footer-note{font-size:14px;color:var(--muted);max-width:520px;line-height:1.6}
+  .wordmark{font-family:var(--disp);font-weight:700;font-size:16vw;line-height:.8;letter-spacing:-.04em;
+    text-align:center;margin-top:26px;background:linear-gradient(180deg,var(--surface-2),transparent);
+    -webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+
+  /* ---- floating back-to-top ---- */
+  .to-top{position:fixed;right:20px;bottom:20px;z-index:60;width:52px;height:52px;border:none;
+    border-radius:50%;background:var(--blurple);color:var(--ink);font-size:20px;cursor:pointer;
+    box-shadow:var(--sh-float);display:none;align-items:center;justify-content:center}
+  .to-top:hover{background:var(--blurple-bright)}
+  .to-top.show{display:flex}
+</style>
+</head>
+<body id="top">
+<div class="mesh" aria-hidden="true"></div>
+
+<!-- nav -->
+<nav class="nav" aria-label="주 메뉴">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top"><img src="assets/logos/favicon-256.png" alt=""><span>MCP 허브</span></a>
+    <div class="nav-links">
+      <a href="#catalog">카탈로그</a>
+      <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP란?</a>
+      <a href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">등록하기</a>
+    </div>
+    <a class="btn btn-green" href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav>
+
+<!-- hero -->
+<header class="wrap hero">
+  <div>
+    <span class="hero-eyebrow"><b>AI ROASTING</b> · MCP 허브</span>
+    <h1><span class="en">AI</span>에 무엇이든<br>연결하세요</h1>
+    <p class="hero-sub"><b>MCP(Model Context Protocol)</b>는 AI를 외부 데이터·서비스에 연결하는 표준 방식입니다. 국내 공시·법령부터 미국 SEC 공시까지, 비즈니스 리더에게 필요한 커넥터를 한곳에 모았습니다.</p>
+    <div class="hero-cta">
+      <a class="btn btn-green" href="#catalog">카탈로그 열기</a>
+      <a class="btn btn-ghost" href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP 알아보기</a>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="big" id="stat-count">65</div>
+    <div class="unit">Connectors</div>
+  </div>
+</header>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee"></div>
+</div>
+
+<!-- catalog -->
+<main class="wrap" id="catalog">
+  <div class="searchrow">
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 4.9 14.32l5.39 5.38 1.42-1.42-5.38-5.39A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z"/></svg>
+      <input id="search" placeholder="서비스·출처로 검색 (예: 토스, 금융감독원)" autocomplete="off" aria-label="MCP 커넥터 검색">
+      <button class="search-clear" id="clear" aria-label="검색 지우기">✕</button>
+    </label>
+  </div>
+
+  <div class="quick" id="quick"><span class="lbl">자주 찾는</span></div>
+
+  <div class="chipbar">
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="legend" role="note" aria-label="인증 구분 안내">
+    <span class="lbl">구분</span>
+    <span class="auth auth-none">바로 사용</span><span class="t">설치하면 즉시 동작</span>
+    <span class="auth auth-login">로그인만 필요</span><span class="t">해당 서비스 계정으로 인증</span>
+    <span class="auth auth-api">API 발급 필요</span><span class="t">무료 API 키 신청 후 사용</span>
+  </div>
+
+  <div id="results"></div>
+
+  <!-- cta band -->
+  <section class="ctaband">
+    <h2>당신의 커넥터를 등록하세요</h2>
+    <p>오픈소스 MCP 서버를 만들었다면, 여기에 올려 비즈니스 리더에게 닿게 하세요.</p>
+    <a class="btn btn-green" href="https://github.com/darjeeling/awesome-mcp-korea" target="_blank" rel="noopener">등록하러 가기 ↗</a>
+  </section>
+</main>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand"><img src="assets/logos/favicon-256.png" alt="">AI ROASTING · MCP 허브</div>
+      <div class="footer-note">스타·포크는 GitHub 실측값 (2026-07-16 기준). 모든 카드는 오픈소스 저장소로 연결됩니다.</div>
+    </div>
+    <div class="wordmark">MCP HUB</div>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="맨 위로 이동">▲</button>
+
+<script>
+/* [name, mono, category, badge(출처), stars, forks, desc, repo, auth] — index.html의 DATA와 동일 정본 */
+const DATA = [
+  ["korean-law-mcp","K","법률·특허","법제처",2222,430,"법령·판례·행정규칙 검색·조회·분석","chrisryugj/korean-law-mcp","api"],
+  ["iros-registry-automation","I","법률·특허","인터넷등기소",6244,717,"법인·부동산 등기부등본 열람 자동화 스킬","NomaDamas/k-skill/tree/main/iros-registry-automation","login"],
+  ["court-payment-order-assistant","C","법률·특허","법원 전자소송",6244,717,"지급명령 신청 정보 정리와 초안 작성 스킬","NomaDamas/k-skill/tree/main/court-payment-order-assistant","login"],
+  ["assembly-api-mcp","A","법률·특허","국회",81,30,"국회 의안·회의록·청원 등 276개 API 접근","hollobit/assembly-api-mcp","api"],
+  ["korean-patent-mcp","K","법률·특허","특허청",40,9,"특허·실용신안·상표·디자인 검색 7개 도구","chrisryugj/korean-patent-mcp","api"],
+  ["us-legal-mcp","U","법률·특허","미국 의회",34,10,"미국 연방 법률·의회 법안 정보 조회","JamesANZ/us-legal-mcp","api"],
+  ["koregx","K","법률·특허","식약처·복지부",0,0,"헬스케어 법령·행정해석·건강보험심사평가원 결정 통합 조회","DrMoony/koregx","api"],
+  ["federal-register-mcp","F","법률·특허","연방관보",0,0,"미국 연방관보 행정명령·규제 검색","aml25/federal-register-mcp","none"],
+  ["stripe/ai","S","금융·투자","Stripe",1682,303,"결제·구독·고객 데이터 에이전트 도구","stripe/ai","api"],
+  ["yahoo-finance2","Y","금융·투자","Yahoo Finance",766,105,"야후 파이낸스 시세·재무 데이터 조회","gadicc/yahoo-finance2","none"],
+  ["sec-edgar-mcp","S","금융·투자","SEC EDGAR",333,92,"미국 증권거래위원회 전자공시에서 상장사 공시·재무 조회","stefanoamorelli/sec-edgar-mcp","none"],
+  ["paypal/agent-toolkit","P","금융·투자","PayPal",188,107,"거래·정산 조회 공식 에이전트 도구","paypal/agent-toolkit","api"],
+  ["korea-stock-mcp","K","금융·투자","금융감독원·한국거래소",157,34,"금융감독원 전자공시와 한국거래소 시세로 한국 주식 분석","jjlabsio/korea-stock-mcp","api"],
+  ["korean-dart-mcp","K","금융·투자","금융감독원",83,14,"금융감독원 전자공시·재무제표·지분 정보를 15개 도구로 조회","chrisryugj/korean-dart-mcp","api"],
+  ["dart","D","금융·투자","금융감독원",22,15,"상장사 실적을 애널리스트급 HTML 리포트로 생성하는 스킬","airoasting/dart","api"],
+  ["korea-finance-mcp","K","금융·투자","한국은행·국토부·금감원 외",54,8,"거시지표·실거래가·공시·시세 통합 조회","emceeKim/korea-finance-mcp","api"],
+  ["KIS_MCP_Server","K","금융·투자","한국투자증권",25,17,"국내외 주식 시세 조회와 주문 기능","migusdn/KIS_MCP_Server","api"],
+  ["mcp-lsopenapi","M","금융·투자","LS증권",2,1,"국내 주식 시세·차트·지표를 자연어로 조회","redoxnet/mcp-lsopenapi","api"],
+  ["toss-securities","T","금융·투자","토스증권",6244,717,"계좌·주식 정보 조회 공식 Open API 스킬","NomaDamas/k-skill/tree/main/toss-securities","login"],
+  ["popbill","P","금융·투자","팝빌",6244,717,"전자세금계산서·현금영수증 등 업무 API 스킬","NomaDamas/k-skill/tree/main/popbill","api"],
+  ["data-go-mcp-servers","D","경제·통계","공공데이터포털",288,51,"공공데이터포털 API를 패키지별 MCP 서버로 제공","Koomook/data-go-mcp-servers","api"],
+  ["fred-mcp-server","F","경제·통계","미 연준 FRED",108,34,"미국 연방준비제도 경제지표·통계 조회","stefanoamorelli/fred-mcp-server","api"],
+  ["us-gov-open-data-mcp","U","경제·통계","미국 정부",103,20,"미국 정부 데이터 API 40여 종, 250개 도구","lzinga/us-gov-open-data-mcp","api"],
+  ["us-census-data-api-mcp","U","경제·통계","미국 인구조사국",85,27,"미국 인구·경제 센서스 통계 공식 서버","uscensusbureau/us-census-bureau-data-api-mcp","api"],
+  ["korean-stats-mcp","K","경제·통계","국가데이터처",76,9,"국가통계포털 시도·자치구 통계·시계열을 자연어로 조회","chrisryugj/korean-stats-mcp","api"],
+  ["be-node-seoul-data-mcp","B","경제·통계","서울시",1,1,"지하철 승하차·문화행사 등 서울 공공데이터","pinnaclesoft-ko/be-node-seoul-data-mcp","api"],
+  ["bok-ecos-mcp","B","경제·통계","한국은행",1,0,"한국은행 경제통계시스템 지표 조회","hyeonseo2/bok-ecos-mcp","api"],
+  ["real-estate-mcp","R","부동산","국토교통부",361,59,"부동산 매매·전월세·청약 정보 제공","tae0y/real-estate-mcp","api"],
+  ["archhub-mcp","A","부동산","국토교통부",52,7,"건축물대장·건축인허가·노후건축물 분석","chrisryugj/archhub-mcp","none"],
+  ["zillow-mcp-server","Z","부동산","Zillow",46,9,"미국 부동산 시세·매물 데이터 조회","sap156/zillow-mcp-server","api"],
+  ["srt-booking","S","지도·교통","SRT",6244,717,"SRT 열차 조회·예약·예약 확인·취소 스킬","NomaDamas/k-skill/tree/main/srt-booking","login"],
+  ["ktx-booking","K","지도·교통","코레일",6244,717,"KTX 열차 조회·좌석 확인·예약·취소 스킬","NomaDamas/k-skill/tree/main/ktx-booking","login"],
+  ["hipass-receipt","H","지도·교통","하이패스",6244,717,"하이패스 사용내역 조회와 영수증 발급 스킬","NomaDamas/k-skill/tree/main/hipass-receipt","login"],
+  ["kakao-api-mcp-server","K","지도·교통","카카오",16,5,"카카오맵 장소 검색·좌표 변환·길찾기","jeong-sik/kakao-api-mcp-server","api"],
+  ["mcp-naver-map","M","지도·교통","네이버 클라우드",7,2,"IP 기반 위치 조회와 드라이빙 경로 탐색","yeonupark/mcp-naver-map","api"],
+  ["k-targo-subway-mcp","K","지도·교통","국토교통부",1,1,"전국 지하철 역 검색과 시간표 조회","slicequeue/k-targo-subway-mcp-server","api"],
+  ["arxiv-mcp-server","A","검색·리서치","arXiv",2961,237,"arXiv 논문 검색·분석","blazickjp/arxiv-mcp-server","none"],
+  ["naver-search-mcp","N","검색·리서치","네이버",79,26,"네이버 검색·데이터랩 트렌드 분석","isnow890/naver-search-mcp","api"],
+  ["naver-ad-performance","N","검색·리서치","네이버 검색광고",6244,717,"검색광고 노출·클릭·전환 성과 조회 스킬","NomaDamas/k-skill/tree/main/naver-ad-performance","api"],
+  ["daiso-mcp","D","생활·여행","다이소",310,21,"주변 다이소 매장 검색과 상품 재고·가격 조회","hmmhmmhm/daiso-mcp","none"],
+  ["mcp-weather","M","생활·여행","AccuWeather",36,30,"전 세계 시간별 일기예보 조회","adhikasp/mcp-weather","api"],
+  ["korea_weather","K","생활·여행","기상청",11,6,"기상청 단기예보 API로 날씨 정보 제공","ohhan777/korea_weather","api"],
+  ["schoolinfo-mcp","S","생활·여행","학교알리미",41,10,"학교 급식·학생수·수행평가 등 공시정보 확인","chrisryugj/schoolinfo-mcp","api"],
+  ["kr-pc-deals-mcp","K","생활·여행","다나와·컴퓨존",10,1,"PC 부품 최저가 비교와 호환성 체크","edward-kim-dev/kr-pc-deals-mcp","none"],
+  ["mcp-korea-tourism-api","M","생활·여행","한국관광공사",9,5,"관광지·행사·숙박·맛집 정보 검색","harimkang/mcp-korea-tourism-api","api"],
+  ["data4library-mcp","D","생활·여행","도서관정보나루",8,2,"공공도서관 검색·대출 현황·독서 통계","isnow890/data4library-mcp","api"],
+  ["k-mfds-fooddb-mcp","K","생활·여행","식약처",5,3,"식품영양성분 DB 검색·조회","slicequeue/k-mfds-fooddb-mcp-server","api"],
+  ["foresttrip-vacancy","F","생활·여행","숲나들e",6244,717,"자연휴양림 예약 가능 객실 조회 스킬","NomaDamas/k-skill/tree/main/foresttrip-vacancy","login"],
+  ["catchtable-sniper","C","생활·여행","캐치테이블",6244,717,"빈자리 감시와 자동 예약 시도 스킬","NomaDamas/k-skill/tree/main/catchtable-sniper","login"],
+  ["yebigun-training","Y","생활·여행","예비군",6244,717,"예비군 훈련 일정·장소 조회 스킬","NomaDamas/k-skill/tree/main/yebigun-training","login"],
+  ["linkedin-mcp-server","L","채용·HR","LinkedIn",2797,487,"링크드인 프로필·구인 정보 조회","stickerdaniel/linkedin-mcp-server","login"],
+  ["jobkorea-talent-search","J","채용·HR","잡코리아",6244,717,"기업회원 인재검색과 후보 shortlist 스킬","NomaDamas/k-skill/tree/main/jobkorea-talent-search","login"],
+  ["saramin-talent-search","S","채용·HR","사람인",6244,717,"기업회원 인재풀 검색과 shortlist 스킬","NomaDamas/k-skill/tree/main/saramin-talent-search","login"],
+  ["salesforcecli/mcp","S","영업·CRM","Salesforce",440,104,"세일즈포스 조직 데이터·메타데이터 공식 서버","salesforcecli/mcp","login"],
+  ["mcp-hubspot","M","영업·CRM","HubSpot",128,61,"허브스팟 CRM 고객·거래 데이터 연동","baryhuang/mcp-hubspot","api"],
+  ["Figma-Context-MCP","F","문서·협업","Figma",15405,1214,"피그마 디자인을 읽어 레이아웃·컴포넌트를 코드로 구현","GLips/Figma-Context-MCP","api"],
+  ["excel-mcp-server","E","문서·협업","Excel",4033,446,"엑셀 파일 생성·수정·차트·피벗 조작","haris-musa/excel-mcp-server","none"],
+  ["Office-PowerPoint-MCP","O","문서·협업","PowerPoint",1838,236,"파워포인트 생성·편집 자동화","GongRzhe/Office-PowerPoint-MCP-Server","none"],
+  ["notebooklm-mcp-cli","N","문서·협업","NotebookLM",5478,844,"NotebookLM 노트북을 조회·질의하는 CLI+MCP","jacob-bd/notebooklm-mcp-cli","login"],
+  ["notion-mcp-server","N","문서·협업","Notion",4531,600,"문서·위키·데이터베이스 공식 서버","makenotion/notion-mcp-server","login"],
+  ["kordoc","K","문서·협업","HWP·PDF",1450,276,"한글·PDF 문서 파싱과 표 추출 등 7개 도구","chrisryugj/kordoc","none"],
+  ["ko-stdict-mcp","K","문서·협업","국립국어원",25,2,"표준국어대사전 표제어·뜻풀이·용례 조회","dahlia/ko-stdict-mcp","none"],
+  ["mcp-korean-spell","M","문서·협업","네이버 맞춤법",24,4,"한국어 맞춤법·문법 교정","winterjung/mcp-korean-spell","none"],
+  ["dooray-mcp","D","문서·협업","두레이",6,5,"메신저 전송·캘린더 조회·일정 등록","dooray-go/dooray-mcp","login"],
+  ["naver-works-mcp","N","문서·협업","네이버웍스",1,0,"네이버 웍스 API 연동","hyeri0903/naver-works-mcp","login"],
+];
+
+const CATS = ["법률·특허","금융·투자","경제·통계","부동산","지도·교통","검색·리서치","생활·여행","채용·HR","영업·CRM","문서·협업"];
+const QUICK_PICKS = ["공시","법령","부동산","검색","날씨"];
+const AUTH_LABELS = { api:"API 발급 필요", login:"로그인만 필요", none:"바로 사용" };
+const AUTH_HINTS = { api:"무료 API 키 신청 후 사용", login:"해당 서비스 계정으로 인증", none:"설치하면 즉시 동작" };
+
+const state = { query:"", category:"전체" };
+const fmtK = n => n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"k" : String(n);
+const esc = s => s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+const ICON_STAR = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>';
+const ICON_FORK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>';
+
+function enrich(row){
+  const [name,mono,category,badge,stars,forks,desc,repo,auth] = row;
+  const owner = repo.split("/")[0];
+  return { name,mono,category,desc,owner,auth,badge,
+    authLabel:AUTH_LABELS[auth],
+    url:"https://github.com/"+repo,
+    avatar:"https://github.com/"+owner+".png?size=96",
+    starStr:fmtK(stars), forkStr:fmtK(forks), _stars:stars, _forks:forks };
+}
+const ALL = DATA.map(enrich);
+const CAT_COUNTS = {};
+ALL.forEach(m => { CAT_COUNTS[m.category] = (CAT_COUNTS[m.category]||0)+1; });
+
+/* ---- render ---- */
+function renderChips(){
+  document.getElementById("chips").innerHTML = ["전체",...CATS].map(label=>{
+    const cnt = label==="전체" ? ALL.length : (CAT_COUNTS[label]||0);
+    const on = state.category===label;
+    return `<button class="chip${on?" active":""}" data-cat="${esc(label)}" aria-pressed="${on}">${esc(label)}<span class="cnt">${cnt}</span></button>`;
+  }).join("");
+}
+function renderQuick(){
+  document.querySelectorAll("#quick button").forEach(b=>{
+    const on = state.query===b.textContent;
+    b.classList.toggle("active",on);
+    b.setAttribute("aria-pressed",on);
+  });
+}
+function renderSearchAffordance(){
+  document.getElementById("clear").classList.toggle("show", state.query.trim().length>0);
+}
+function cardHTML(m){
+  return `
+  <a class="card" href="${m.url}" target="_blank" rel="noopener">
+    <span class="card-head">
+      <span class="card-thumb"><img src="${m.avatar}" alt="" loading="lazy" onerror="this.remove()"></span>
+      <span class="card-headtxt">
+        <span class="card-name" title="${esc(m.name)}">${esc(m.name)}</span>
+        <span class="card-meta">
+          <span class="badge">${esc(m.badge)}</span>
+          <span class="card-owner">@${esc(m.owner)}</span>
+        </span>
+      </span>
+    </span>
+    <span class="card-desc" title="${esc(m.desc)}">${esc(m.desc)}</span>
+    <span class="card-foot">
+      <span class="auth auth-${m.auth}" title="${AUTH_HINTS[m.auth]}">${m.authLabel}</span>
+      <span class="stats">
+        <span class="star" title="GitHub 스타">${ICON_STAR}${m.starStr}</span>
+        <span class="fork" title="GitHub 포크">${ICON_FORK}${m.forkStr}</span>
+      </span>
+      <span class="card-go">→</span>
+    </span>
+  </a>`;
+}
+function renderResults(){
+  const q = state.query.trim().toLowerCase();
+  let items = ALL;
+  if (q) items = items.filter(m => (m.name+" "+m.desc+" "+m.badge+" "+m.owner).toLowerCase().includes(q));
+  items = items.slice().sort((a,b)=> b._stars - a._stars);
+
+  const sections = CATS.map(name=>({ name, items:items.filter(m=>m.category===name) })).filter(s=>s.items.length);
+  const el = document.getElementById("results");
+  if (!sections.length){
+    el.innerHTML = `<div class="empty"><div class="msg">“${esc(state.query)}” 결과 없음</div>
+      <div class="sub">다른 검색어를 입력하거나 검색을 초기화하세요.</div>
+      <button class="btn btn-blurple" id="reset">검색 초기화</button></div>`;
+    document.getElementById("reset").addEventListener("click", clearSearch);
+    return;
+  }
+  el.innerHTML = sections.map(sec=>`
+    <section class="section" id="sec-${CATS.indexOf(sec.name)}">
+      <div class="section-head"><h2>${esc(sec.name)}</h2><span class="n">${sec.items.length}</span></div>
+      <div class="grid">${sec.items.map(cardHTML).join("")}</div>
+    </section>`).join("");
+}
+function render(){ renderChips(); renderQuick(); renderSearchAffordance(); renderResults(); }
+
+/* ---- interactions ---- */
+const searchInput = document.getElementById("search");
+function clearSearch(){
+  state.query=""; searchInput.value="";
+  renderQuick(); renderSearchAffordance(); renderResults(); searchInput.focus();
+}
+searchInput.addEventListener("input", e=>{
+  state.query=e.target.value; renderQuick(); renderSearchAffordance(); renderResults();
+});
+document.getElementById("clear").addEventListener("click", clearSearch);
+window.addEventListener("keydown", e=>{
+  if (e.key==="/" && document.activeElement!==searchInput){ e.preventDefault(); searchInput.focus(); }
+});
+
+/* 카테고리 칩: 해당 섹션으로 스크롤 */
+document.getElementById("chips").addEventListener("click", e=>{
+  const btn = e.target.closest(".chip"); if(!btn) return;
+  state.category = btn.dataset.cat; renderChips();
+  const target = btn.dataset.cat==="전체"
+    ? document.getElementById("results")
+    : document.getElementById("sec-"+CATS.indexOf(btn.dataset.cat));
+  if (target){
+    const y = target.getBoundingClientRect().top + scrollY - 130;
+    scrollTo({ top:y, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth" });
+  }
+});
+
+/* quick picks : 토글 */
+const quickEl = document.getElementById("quick");
+QUICK_PICKS.forEach(name=>{
+  const b = document.createElement("button");
+  b.textContent = name;
+  b.addEventListener("click", ()=>{
+    const on = state.query===name;
+    state.category="전체"; state.query = on?"":name; searchInput.value = state.query; render();
+  });
+  quickEl.appendChild(b);
+});
+
+/* marquee 내용 (2배 복제로 무한 스크롤) */
+const words = ["연결","조회","자동화","리서치","공시","길찾기"];
+const seg = words.map(w=>`<span>${w}</span><span class="dot">·</span>`).join("");
+document.getElementById("marquee").innerHTML = seg+seg;
+
+/* scrollspy + back-to-top */
+function syncChipToScroll(){
+  if (state.query.trim()) return;
+  const panels = [...document.querySelectorAll("#results .section")];
+  if (!panels.length) return;
+  let current = "전체";
+  const line = 150;
+  if (panels[0].getBoundingClientRect().top <= line){
+    for (const p of panels) if (p.getBoundingClientRect().top <= line) current = p.querySelector("h2").textContent;
+  }
+  if (state.category!==current){ state.category=current; renderChips(); }
+}
+const toTop = document.getElementById("to-top");
+toTop.addEventListener("click", ()=> scrollTo({ top:0, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth" }));
+let tick=false;
+addEventListener("scroll", ()=>{
+  if (tick) return; tick=true;
+  requestAnimationFrame(()=>{ syncChipToScroll(); toTop.classList.toggle("show", scrollY>700); tick=false; });
+}, { passive:true });
+
+/* ---- init ---- */
+document.getElementById("stat-count").textContent = ALL.length;
+render();
+</script>
+</body>
+</html>
